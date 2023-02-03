@@ -13,15 +13,15 @@ export interface RegisterAction {
     password: string
 }
 
-export const login = createAsyncThunk<string, LoginAction>(
+export const login = createAsyncThunk<string | AxiosError, LoginAction>(
     'login',
     async ({ email, password }) => {
         try {
             const  idToken = await authApi.login(email, password);
             return idToken;
         } catch (error) {
-            alert((error as any).response.data)
-            throw error
+            console.log('error', error)
+            throw new Error((error as any).response.data)
         }
     })
 
@@ -32,7 +32,6 @@ export const register = createAsyncThunk<string, RegisterAction>(
             const idToken = await authApi.register(username, email, password);
             return idToken;
         } catch (error) {
-            alert((error as any).response.data)
-            throw error
+            throw new Error((error as any).response.data)
     }
 })

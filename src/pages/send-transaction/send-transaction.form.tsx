@@ -7,7 +7,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { sendTransaction } from '../../api/transactions'
 import { getUserInfo, getUserList } from "../../api/user";
 import { RootState } from '../../store';
-
+import { Alert, Button, InputBaseComponentProps, Snackbar } from '@mui/material';
+import './.css'
 
 const SendTransaction: React.FC = () => {
     const location = useLocation();
@@ -15,6 +16,7 @@ const SendTransaction: React.FC = () => {
     const [txUsername, setTxUsername] = useState('');
     const [txAmount, setTxAmount] = useState(0);
     const [options, setOptions] = useState([{ name: '' }]);
+    const [validationError, setValidationError] = useState('');
     const [ balanceAmount, setBalanceAmount ] = useState(0);
     
     const { idToken } = useSelector((state: RootState) => state.auth);
@@ -30,7 +32,6 @@ const SendTransaction: React.FC = () => {
             setTxUsername(location.state.username);
             setTxAmount(location.state.amount);
         }
-        return () => { }
       }, [idToken, location]);
 
 
@@ -38,7 +39,7 @@ const SendTransaction: React.FC = () => {
         if (!value || value === '') return;
         const number = parseInt(value);
         if (number > balanceAmount) {
-            alert('Not enough money');
+            setValidationError('Not enough tokens on your balance');
         } else {
             setTxAmount(number);
         }
@@ -67,33 +68,80 @@ const SendTransaction: React.FC = () => {
           });
       };
 
+      console.log('aaa', { txAmount })
   return (
-    <div>
+    <div className='send-tx-form'>
         <a href='/cabinet'>
-            <button type="button">{'Go back to cabinet'}</button>
+            <Button
+                    type="button"
+                    variant="contained"
+                    color="primary"
+                    size="medium"
+                    disableElevation= {true}
+                    sx={{ width: '15vw' }}
+                > 
+                Back to cabinet
+            </Button>
         </a>
-        <Autocomplete
-            id="name"
-            options={options}
-            onInputChange={onInputChange}
-            getOptionLabel={(option) => option.name}
-            style={{ width: 300 }}
-            defaultValue={location?.state?.username ? {name: location.state.username} : {name: ''}}
-            renderInput={(params) => (
-            <TextField {...params} label="Name of receiver" variant="outlined" />
-            )}
-        />
-        <label>
-            Send amount:
-                <input
-                    type="text"
-                    value={txAmount}
+        <br />
+        <table>
+        <thead>
+            <th>
+                <TextField
+                    label='Send amount' 
+                    inputProps={txAmount as unknown as InputBaseComponentProps}
+                    size='small'
+                    margin='normal'
+                    fullWidth={true}
+                    sx={{ width: '20vw' }}
+                    defaultValue={location?.state?.amount ? location.state.amount : 0}
                     onChange={e => checkAmount(e.target.value)}
+                />  
+            </th>
+            <th>
+            </th>
+        </thead>
+        <tbody>
+            <tr> 
+                <td>
+                <Autocomplete
+                    id="name"
+                    options={options}
+                    onInputChange={onInputChange}
+                    getOptionLabel={(option) => option.name}
+                    style={{ width: '20vw' }}
+                    defaultValue={location?.state?.username ? {name: location.state.username} : {name: ''}}
+                    renderInput={(params) => (
+                    <TextField {...params} label="Name of receiver" variant="outlined" />
+                    )}
                 />
-        </label>
-        <button type="button" onClick={() => {
-            send()
-        }}> Send transaction </button>
+                </td>
+                <td align='left'>
+                    <Button
+                    type="button"
+                    variant="contained"
+                    color="primary"
+                    size="medium"
+                    disableElevation= {true}
+                    sx={{ width: '15vw' }}
+                    onClick={() => {
+                        send()
+                    }}
+                    > 
+                        Send transaction
+                    </Button>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        <Snackbar
+            message={validationError}
+            autoHideDuration={4000}
+            open={validationError.length > 0}
+            onClose = {() => { setValidationError('') }}
+        >
+            <Alert severity="error">{validationError}</Alert>
+        </Snackbar>
      </div>
   );
 };

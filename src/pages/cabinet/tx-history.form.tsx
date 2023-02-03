@@ -1,5 +1,6 @@
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -20,18 +21,21 @@ export const TransactionsHistory: React.FC = () => {
 
     const { idToken } = useSelector((state: RootState) => state.auth);
     
-    getTxHistory(idToken).then(txHistory => {
-        setTxHistory(txHistory);
-    }).catch(error => {
-        navigate('/login');
-    })
+    useEffect(() => {
+        getTxHistory(idToken).then(txHistory => {
+            setTxHistory(txHistory);
+        }).catch(error => {
+            navigate('/login');
+        })
+    }, [idToken])
+
 
     const handleDublicateTransaction = (row: TransactionData) => {
-        navigate(`/send-transaction?username=${row.username}&amount=${row.amount}`, { state: { username: row.username, amount: row.amount } });
+        navigate(`/send-transaction?username=${row.username}&amount=${row.amount * -1}`, { state: { username: row.username, amount: row.amount } });
     }
 
-    const showTxHistory = () => {
-        return (     
+
+    return (     
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650, maxWidth: 800 }} aria-label="simple table">
               <TableHead>
@@ -46,17 +50,14 @@ export const TransactionsHistory: React.FC = () => {
               <TableBody>
                 {txHistory.map((row) => (
                   <TableRow
-                    key={row.date}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    key={row.id}
                   >
-                    <TableCell component="th" scope="row">
-                      {row.date}
-                    </TableCell>
+                    <TableCell align="right"> {row.date} </TableCell>
                     <TableCell align="right">{row.username}</TableCell>
                     <TableCell align="right">{row.amount}</TableCell>
                     <TableCell align="right">{row.balance}</TableCell>
                     <TableCell align="right">
-                        <Button
+                        {row.amount < 0 ? <Button
                             variant="contained"
                             color={"primary"}
                             onClick={() => {
@@ -64,14 +65,12 @@ export const TransactionsHistory: React.FC = () => {
                             }}
                         >
                         {"Repeat"}
-                        </Button>
+                        </Button> : <></>}
                     </TableCell>
-
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </TableContainer>);
-    }
-    return showTxHistory()
+          </TableContainer>
+        );
 }

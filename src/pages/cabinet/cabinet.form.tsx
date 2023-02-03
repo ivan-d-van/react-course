@@ -3,23 +3,44 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../reducers/auth';
 import { Balance } from './balance.form';
 import { TransactionsHistory } from './tx-history.form';
+import './.css'
+import { Button } from '@mui/material';
 
 const Cabinet: React.FC = () => {
     const dispatch = useDispatch();
     return (
         <div>
+        <div className='cabinet-general-form'>
+        <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    disableElevation= {true}
+                    sx={{ width: '25vw' }}
+                    onClick={() => {
+                        dispatch(logout())
+                    }}
+                > 
+                    Logout 
+            </Button>
+            <br />
+            <br />
             <Balance />
             <br />
             <a href='/send-transaction'>
-                <button type="button">{'Send transation'}</button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    disableElevation= {true}
+                    sx={{ width: '25vw' }}
+                > 
+                    Send transaction 
+                </Button>
             </a>
-            <button type="button" onClick={() => {
-                dispatch(logout())
-            }}>
-            {'Logout'}
-            </button>
             <br />
-            /<TransactionsHistory />
+        </div>
+        <TransactionsHistory />
         </div>
     );
 };

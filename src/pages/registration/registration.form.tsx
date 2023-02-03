@@ -1,32 +1,33 @@
-import { Button, InputBaseComponentProps, TextField, Typography } from '@mui/material';
-import { margin } from '@mui/system';
+import { Button, InputBaseComponentProps, TextField, Typography, Snackbar, Alert } from '@mui/material';
+import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../../actions/auth';
 import { registerSuccess } from '../../reducers/auth';
 import { AppDispatch } from '../../store';
-import './registration.css'
+import './.css'
 
 const Registration: React.FC = () => {
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [apiError, setApiError] = useState<String>('');
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     if (password !== passwordConfirm) {
-      alert("Passwords don't match");
+      setApiError("Passwords don't match");
     } else {
         try {
             const idToken = await dispatch(register({ username, email, password })).unwrap();
             await dispatch(registerSuccess(idToken));
             navigate('/cabinet');
         } catch (error) {
-            console.log(error);
+            setApiError((error as any).message);
         }
     }
   };
@@ -86,6 +87,14 @@ const Registration: React.FC = () => {
             > 
                 Register 
             </Button>
+            <Snackbar
+                message={apiError}
+                autoHideDuration={6000}
+                open={apiError.length > 0}
+                onClose = {() => { setApiError('') }}
+            >
+                <Alert severity="error"> {apiError} </Alert>
+            </Snackbar>
             <Typography variant='subtitle1' component='div' gutterBottom = {true}>
                 <a href='/login'>Already have an account?</a>
             </Typography>

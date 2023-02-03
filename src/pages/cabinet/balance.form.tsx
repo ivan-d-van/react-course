@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import React from "react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
@@ -20,8 +21,12 @@ export const Balance: React.FC = () => {
     const showBalance = () => {
             return (
                 <div>
-                    <div key='name'>Hello, {username}</div>
-                    <div key='balance'>Your balance amount: {balance} PW</div>
+                    <Typography variant='h5' component='div' gutterBottom = {true}>
+                        Hello, {username}
+                    </Typography> 
+                    <Typography variant='h5' component='div' gutterBottom = {true}>
+                        Your balance amount: {balance} PW
+                    </Typography> 
                 </div>
             );
     }
