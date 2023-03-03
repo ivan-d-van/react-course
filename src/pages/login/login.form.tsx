@@ -28,7 +28,6 @@ const Login: React.FC = () => {
         await dispatch(loginSuccess(idToken));
         navigate('/cabinet');
     } catch (error) {
-        console.log('aaaa', error)
         setApiError((error as any).message);
     }
   };

@@ -24,7 +24,6 @@ const authSlice = createSlice({
             }
         },
         registerSuccess: (state, action) => {
-            console.log('registerSuccess action.payload is: ', action)
             localStorage.setItem('idToken', action.payload);
             return {
                 ...state,

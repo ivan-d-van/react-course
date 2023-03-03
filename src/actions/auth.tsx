@@ -20,8 +20,9 @@ export const login = createAsyncThunk<string | AxiosError, LoginAction>(
             const  idToken = await authApi.login(email, password);
             return idToken;
         } catch (error) {
-            console.log('error', error)
-            throw new Error((error as any).response.data)
+            if ((error as any).response?.data) throw new Error((error as any).response.data)
+            if ((error as any).message) throw new Error((error as any).message)
+            throw error;
         }
     })
 
@@ -32,6 +33,8 @@ export const register = createAsyncThunk<string, RegisterAction>(
             const idToken = await authApi.register(username, email, password);
             return idToken;
         } catch (error) {
-            throw new Error((error as any).response.data)
-    }
+            if ((error as any).response?.data) throw new Error((error as any).response.data)
+            if ((error as any).message) throw new Error((error as any).message)
+            throw error;
+        }
 })

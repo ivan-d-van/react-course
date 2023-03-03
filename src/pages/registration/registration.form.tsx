@@ -1,5 +1,4 @@
 import { Button, InputBaseComponentProps, TextField, Typography, Snackbar, Alert } from '@mui/material';
-import { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';

@@ -1,0 +1,11 @@
+.cabinet-general-form {
+    width: 50vw;
+    height: 40vh;
+    padding: 10px;
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+    padding-left: 10vw;
+}

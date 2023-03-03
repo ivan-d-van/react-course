@@ -1,0 +1,10 @@
+.send-tx-form {
+    width: 50vw;
+    height: 50vh;
+    padding: 10px;
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    justify-content: center;
+    align-items: left;
+}
